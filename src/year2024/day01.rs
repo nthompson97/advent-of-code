@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
 
@@ -15,15 +16,10 @@ fn parse(contents: &str) -> Vec<(u32, u32)> {
 }
 
 fn part1(data: &Vec<(u32, u32)>) -> u32 {
-    println!("{:?}", data);
-
     let (mut left, mut right): (Vec<u32>, Vec<u32>) = data.iter().cloned().unzip();
 
     left.sort();
     right.sort();
-
-    println!("{:?}", left);
-    println!("{:?}", right);
 
     let diff: Vec<u32> = left
         .into_iter()
@@ -31,13 +27,26 @@ fn part1(data: &Vec<(u32, u32)>) -> u32 {
         .map(|(a, b)| a.abs_diff(b))
         .collect();
 
-    println!("{:?}", diff);
+    let answer: u32 = diff.iter().sum();
 
-    11
+    answer
 }
 
-fn part2() -> u32 {
-    1
+fn part2(data: &Vec<(u32, u32)>) -> u32 {
+    let (left, right): (Vec<u32>, Vec<u32>) = data.iter().cloned().unzip();
+
+    let mut counts = HashMap::new();
+
+    for v in right {
+        *counts.entry(v).or_insert(0) += 1;
+    }
+
+    let answer: u32 = left
+        .iter()
+        .map(|a| a * counts.get(&a).copied().unwrap_or(0))
+        .sum();
+
+    answer
 }
 
 pub fn run() -> () {
@@ -49,7 +58,7 @@ pub fn run() -> () {
     let answer_1 = part1(&data);
     println!("2024 day 1, part 1 answer: {}", answer_1);
 
-    let answer_2 = part2();
+    let answer_2 = part2(&data);
     println!("2024 day 1, part 2 answer: {}", answer_2);
 }
 
