@@ -107,10 +107,10 @@ pub fn run() -> () {
     let data = parse(&contents);
 
     let answer_1 = part1(&data);
-    println!("2024 day 1, part 1 answer: {}", answer_1);
+    println!("2025 day 1, part 1 answer: {}", answer_1);
 
     let answer_2 = part2(&data);
-    println!("2024 day 1, part 2 answer: {}", answer_2);
+    println!("2025 day 1, part 2 answer: {}", answer_2);
 }
 
 #[cfg(test)]
