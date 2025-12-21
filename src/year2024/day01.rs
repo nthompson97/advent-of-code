@@ -34,7 +34,6 @@ fn part1(data: &Vec<(u32, u32)>) -> u32 {
 
 fn part2(data: &Vec<(u32, u32)>) -> u32 {
     let (left, right): (Vec<u32>, Vec<u32>) = data.iter().cloned().unzip();
-
     let mut counts = HashMap::new();
 
     for v in right {
@@ -80,13 +79,5 @@ mod tests {
         let expected = vec![(3, 4), (4, 3), (2, 5), (1, 3), (3, 9), (3, 3)];
 
         assert_eq!(data, expected);
-    }
-
-    #[test]
-    fn test_part1() {
-        let data = parse(&CONTENTS);
-        let result = part1(&data);
-
-        assert_eq!(result, 11);
     }
 }

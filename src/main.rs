@@ -2,6 +2,7 @@ use clap::Parser;
 
 // TODO: implement some generic macro for importing all the year/day modules
 use aoc::year2024;
+use aoc::year2025;
 
 #[derive(Parser, Debug)]
 struct Args {
@@ -19,6 +20,7 @@ fn main() {
 
     match (args.year, args.day) {
         (2024, 1) => year2024::day01::run(),
+        (2025, 1) => year2025::day01::run(),
         _ => panic!("No solution available!"),
     };
 }
