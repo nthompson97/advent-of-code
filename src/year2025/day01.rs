@@ -59,7 +59,45 @@ fn part1(data: &Vec<(Direction, i32)>) -> i32 {
 }
 
 fn part2(data: &Vec<(Direction, i32)>) -> i32 {
-    1
+    let mut count: i32 = 0;
+    let mut position: i32 = 50;
+
+    for (direction, magnitude) in data {
+        match direction {
+            Direction::Left => {
+                // Not completely happy here - edge case is that if we're
+                // starting from zero and moving left, we'll double count,
+                // so we handle it by decrementing first
+                if position == 0 {
+                    count -= 1;
+                };
+                position -= magnitude;
+            }
+            Direction::Right => position += magnitude,
+        }
+
+        while position < 0 {
+            position += 100;
+            count += 1;
+        }
+
+        while position > 100 {
+            position -= 100;
+            count += 1;
+        }
+
+        if position == 100 {
+            position = 0;
+        }
+
+        if position == 0 {
+            count += 1;
+        }
+
+        println!("Moved {direction:?} {magnitude} steps, count is {count} position is {position}");
+    }
+
+    count
 }
 
 pub fn run() -> () {
@@ -84,6 +122,18 @@ mod tests {
         R14
         L82";
 
+    const CONTENTS_2: &str = "
+            L68
+            L30
+            R48
+            L5
+            R60
+            L55
+            L1
+            L99
+            R14
+            L82";
+
     #[test]
     fn test_parse() {
         let data = parse(&CONTENTS);
@@ -98,20 +148,17 @@ mod tests {
 
     #[test]
     fn test_part1() {
-        let contents: &str = "
-            L68
-            L30
-            R48
-            L5
-            R60
-            L55
-            L1
-            L99
-            R14
-            L82";
-        let data = parse(&contents);
+        let data = parse(&CONTENTS_2);
         let answer = part1(&data);
 
         assert_eq!(answer, 3);
+    }
+
+    #[test]
+    fn test_part2() {
+        let data = parse(&CONTENTS_2);
+        let answer = part2(&data);
+
+        assert_eq!(answer, 6);
     }
 }
