@@ -1,11 +1,11 @@
 use std::fs;
 use std::path::Path;
 
-fn parse(contents: &str) -> Vec<(u32, u32)> {
-    let mut data: Vec<(u32, u32)> = Vec::new();
+fn parse(contents: &str) -> Vec<(u64, u64)> {
+    let mut data: Vec<(u64, u64)> = Vec::new();
 
     for range in contents.split(",") {
-        let mut components = range.split("-");
+        let mut components = range.trim().split("-");
 
         let start = components
             .next()
@@ -24,12 +24,60 @@ fn parse(contents: &str) -> Vec<(u32, u32)> {
     data
 }
 
-fn part1(data: &Vec<(u32, u32)>) -> u32 {
-    1
+fn valid_id(s: String) -> bool {
+    let len = s.len();
+
+    if len % 2 == 1 {
+        return true;
+    } else {
+        let (a, b) = s.split_at(len / 2);
+
+        return a != b;
+    }
 }
 
-fn part2(data: &Vec<(u32, u32)>) -> u32 {
-    1
+fn part1(data: &Vec<(u64, u64)>) -> u64 {
+    let mut sum: u64 = 0;
+
+    for (start, end) in data {
+        for id in *start..=*end {
+            let s: String = id.to_string();
+            if !valid_id(s) {
+                sum += id;
+            }
+        }
+    }
+
+    sum
+}
+
+fn valid_id_2(s: String) -> bool {
+    // Incrementing one at a time, check if the whole string is equal to
+    // repetitions of the same internal string, up to the midpoint.
+    let len = s.len();
+
+    for i in 1..len / 2 {
+        if len % i != 0 {
+            continue;
+        }
+    }
+
+    true
+}
+
+fn part2(data: &Vec<(u64, u64)>) -> u64 {
+    let mut sum: u64 = 0;
+
+    for (start, end) in data {
+        for id in *start..=*end {
+            let s: String = id.to_string();
+            if !valid_id_2(s) {
+                sum += id;
+            }
+        }
+    }
+
+    sum
 }
 
 pub fn run() -> () {
@@ -72,6 +120,14 @@ mod tests {
     }
 
     #[test]
+    fn test_valid_id() {
+        let data: Vec<(u64, bool)> = vec![(1, true), (11, false), (121, true), (1212, false)];
+        for (id, validity) in data {
+            assert_eq!(valid_id(id.to_string()), validity);
+        }
+    }
+
+    #[test]
     fn test_part1() {
         let data = parse(&CONTENTS);
         let answer = part1(&data);
@@ -84,6 +140,6 @@ mod tests {
         let data = parse(&CONTENTS);
         let answer = part2(&data);
 
-        assert_eq!(answer, 6);
+        assert_eq!(answer, 4174379265);
     }
 }
