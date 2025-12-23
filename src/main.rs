@@ -22,6 +22,7 @@ fn main() {
         (2024, 1) => year2024::day01::run(),
         (2025, 1) => year2025::day01::run(),
         (2025, 2) => year2025::day02::run(),
+        (2025, 3) => year2025::day03::run(),
         _ => panic!("No solution available!"),
     };
 }
