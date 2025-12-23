@@ -56,13 +56,15 @@ fn valid_id_2(s: String) -> bool {
     // repetitions of the same internal string, up to the midpoint.
     let len = s.len();
 
-    for i in 1..len / 2 {
-        if len % i != 0 {
-            continue;
+    for i in 1..1 + (len / 2) {
+        let substring = s[..i].repeat(len / i);
+
+        if s == substring {
+            return false;
         }
     }
 
-    true
+    return true;
 }
 
 fn part2(data: &Vec<(u64, u64)>) -> u64 {
@@ -133,6 +135,14 @@ mod tests {
         let answer = part1(&data);
 
         assert_eq!(answer, 1227775554);
+    }
+
+    #[test]
+    fn test_valid_id_2() {
+        let data: Vec<(u64, bool)> = vec![(12341234, false), (123123123, false), (123123124, true)];
+        for (id, validity) in data {
+            assert_eq!(valid_id_2(id.to_string()), validity);
+        }
     }
 
     #[test]
