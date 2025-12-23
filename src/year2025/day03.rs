@@ -5,28 +5,47 @@ fn parse(contents: &str) -> Vec<&str> {
     return contents.lines().filter(|x| !x.is_empty()).collect();
 }
 
+fn getmax(x: Vec<u32>) -> (usize, u32) {
+    let mut index: usize = 0;
+    let mut max_value: u32 = 0;
+
+    for (i, value) in x.iter().enumerate() {
+        if *value > max_value {
+            index = i;
+            max_value = *value;
+        }
+    }
+
+    return (index, max_value);
+}
+
 fn joltage(batteries: &str, n: usize) -> u64 {
     // When building the result, the next number in the series will always
     // be the maximum value in a window that still allows us to have values
     // remaining for the rest of the joltage values.
 
+    let len: usize = batteries.len();
     let mut result: u64 = 0;
     let mut index: usize = 0;
 
+    println!("{batteries} ({len} values)");
+
     let batteries: Vec<u32> = batteries.chars().map(|x| x.to_digit(10).unwrap()).collect();
 
-    for i in batteries.len() - n..batteries.len() {
-        println!("{}", i);
+    for i in len - n..len {
+        let (max_index, max_value) = getmax(batteries[index..i + 1].to_vec());
 
-        let (max_index, max_value) = batteries[index..i]
-            .iter()
-            .enumerate()
-            .max_by_key(|(_, val)| **val)
-            .map(|(idx, val)| (i + idx, val))
-            .unwrap();
+        println!(
+            "{}..{}, {:?} => {} @ index {}",
+            index,
+            i,
+            &batteries[index..i + 1],
+            max_value,
+            max_index
+        );
 
-        result = 10 * result + (*max_value as u64);
-        index = max_index;
+        result = 10 * result + (max_value as u64);
+        index += 1 + max_index;
     }
 
     return result;
