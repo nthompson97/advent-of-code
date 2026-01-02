@@ -1,6 +1,6 @@
 # Name of the container and image
 IMAGE_NAME := advent-of-code
-CONTAINER_NAME := dev
+CONTAINER_NAME := advent-of-code
 VERSION := $(shell git describe --always --abbrev=0)
 
 # Default build target
@@ -17,10 +17,12 @@ build:
 # FIXME: git does not work in the container right now, not a big deal
 .PHONY: up
 up:
-	podman run -d \
+	-podman volume create $(CONTAINER_NAME)-bash-history
+	-podman run -d \
 		--name $(CONTAINER_NAME) \
 		--hostname $(CONTAINER_NAME) \
 		--userns keep-id \
+		--volume $(CONTAINER_NAME)-bash-history:/home/ubuntu/bash_history \
 		--volume ./nvim:/home/ubuntu/.config/nvim:z \
 		--volume ./:/home/ubuntu/repo/:z \
 		--workdir /home/ubuntu/repo \
